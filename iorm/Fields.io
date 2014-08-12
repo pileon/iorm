@@ -81,7 +81,12 @@ BooleanField := Field clone do(
     )
 
     setValueFromSQL := method(sql,
-        self setValue(sql asBoolean)
+        self setValue(
+            if(sql asNumber isNan,
+               sql asLowercase == "true",
+               sql asNumber != 0
+            )
+        )
     )
 
     getCreateQuery := method(
