@@ -71,6 +71,29 @@ IntegerField := Field clone do(
     )
 )
 
+BooleanField := Field clone do(
+    setTypeName("BOOLEAN")
+    setIoProto(Number)
+
+    getValueAsSQL := method(
+        #quote(value) # TODO: really quoted?
+        value
+    )
+
+    setValueFromSQL := method(sql,
+        self setValue(
+            if(sql asNumber isNan,
+               sql asLowercase == "true",
+               sql asNumber != 0
+            )
+        )
+    )
+
+    getCreateQuery := method(
+        """#{ quote(name) } #{ typeName } #{ getFlagsAsSQL }""" interpolate
+    )
+)
+
 VarcharField := Field clone do(
     setTypeName("VARCHAR")
     setIoProto(Sequence)
